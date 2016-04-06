@@ -1,6 +1,6 @@
 import os
 import re
-import tuxedo
+import endurox
 import imp
 
 
@@ -17,18 +17,18 @@ class Reloader:
         self.module = module
 
     def reloader_func(self):
-        tuxedo.atmi.userlog("Reload function called.")
+        endurox.atmi.userlog("Reload function called.")
         try:
-            tuxedo.atmi.userlog("Check source code modification ...")
+            endurox.atmi.userlog("Check source code modification ...")
             if self.load_if_modified() == 1:
-                tuxedo.atmi.userlog("Server code was modified -> reload.")
+                endurox.atmi.userlog("Server code was modified -> reload.")
                 del self.server
                 self.server = self.module.server()
             else:
-                tuxedo.atmi.userlog("Server code was not modified.")
+                endurox.atmi.userlog("Server code was not modified.")
                 
         except Exception as e:
-            tuxedo.atmi.userlog("Can't reload " + repr(self.module) + ". Exception is" + str(e))
+            endurox.atmi.userlog("Can't reload " + repr(self.module) + ". Exception is" + str(e))
         s=self.server
         return s
 
@@ -44,7 +44,7 @@ class Reloader:
         try:
             mtime_pyc = os.stat(filename_pyc)[9]
         except:
-            tuxedo.atmi.userlog("load_if_modified: exception @ stat (1)")
+            endurox.atmi.userlog("load_if_modified: exception @ stat (1)")
             pass
 
         mtime_py = 0
@@ -54,7 +54,7 @@ class Reloader:
             filename_py = filename_base + ".py"
             mtime_py = os.stat(filename_py)[9]
         except:
-            tuxedo.atmi.userlog("load_if_modified: exception @ stat (2)")
+            endurox.atmi.userlog("load_if_modified: exception @ stat (2)")
             pass
         
         if mtime_py:

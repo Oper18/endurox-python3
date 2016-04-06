@@ -1,7 +1,7 @@
 #!/home/szhh5e/bin/python
 
 """
-Distutils installer for Tuxmodule / modified setup from m2crypto module
+Distutils installer for Ndrxmodule / modified setup from m2crypto module
 
 Copyright (c) 1999-2003, Ng Pheng Siong. All rights reserved.
 Copyright (c) 2003-2007, Ralf Henschkowski. All rights reserved.
@@ -18,24 +18,24 @@ from distutils.command import build_ext, clean
 
 my_inc = os.path.join(os.getcwd(), '.')
 try:
-    tuxedo_dir = os.environ["TUXDIR"]
+    endurox_dir = os.environ["NDRX_HOME"]
 except KeyError:
-    print("*** ERROR ***: Please set your environment. TUXDIR not set.")
+    print("*** ERROR ***: Please set your environment. NDRX_HOME not set.")
     sys.exit(1)
 
 
-# set to your desired Tuxedo major version number: 6 or 7/8
-# (you can also access this later  from the module as tuxedo.atmi.TUXVERSION)
-tuxversion = 0  
+# set to your desired Endurox major version number: 6 or 7/8
+# (you can also access this later  from the module as endurox.atmi.NDRXVERSION)
+ndrxversion = 0  
 
-# auto-detect Tuxedo version (to link the correct "new" or "old" (pre-7.1) style libs)
-tux8 = os.access(os.path.join(tuxedo_dir, "udataobj", "System.rdp"), os.F_OK)
-if tuxversion == 0 and tux8 == True:
-    print("*** Building for Tuxedo Version > 6  ... ***")
-    tuxversion = 8
+# auto-detect Endurox version (to link the correct "new" or "old" (pre-7.1) style libs)
+ndrx8 = os.access(os.path.join(endurox_dir, "udataobj", "System.rdp"), os.F_OK)
+if ndrxversion == 0 and ndrx8 == True:
+    print("*** Building for Endurox Version > 6  ... ***")
+    ndrxversion = 8
 else:
-    print("*** Building for Tuxedo 6.x ... ***")
-    tuxversion = 6
+    print("*** Building for Endurox 6.x ... ***")
+    ndrxversion = 6
 
 
 
@@ -50,15 +50,15 @@ if os.name == 'nt':
     sys.exit(1)
 
 elif os.name == 'posix':
-    include_dirs = [my_inc, tuxedo_dir + '/include',  '/usr/include']
-    library_dirs = [tuxedo_dir + '/lib', '/usr/lib']
+    include_dirs = [my_inc, endurox_dir + '/include',  '/usr/include']
+    library_dirs = [endurox_dir + '/lib', '/usr/lib']
 
-    if tuxversion < 7:
-        libraries = ['tux', 'tmib', 'qm', 'buft', 'tux2', 'fml', 'fml32', 'gp', '/usr/lib/libcrypt.a']
-        libraries_ws = ['wsc', 'buft', 'wsc', 'nws', 'nwi', 'nws', 'fml', 'fml32', 'gp', 'nsl', 'socket', '/usr/lib/libcrypt.a']
+    if ndrxversion < 7:
+        libraries = ['ndrx', 'tmib', 'qm', 'buft', 'ndrx2', 'ubf', 'ubf32', 'gp', '/usr/lib/libcrypt.a']
+        libraries_ws = ['wsc', 'buft', 'wsc', 'nws', 'nwi', 'nws', 'ubf', 'ubf32', 'gp', 'nsl', 'socket', '/usr/lib/libcrypt.a']
     else:
-        libraries = ['tux', 'tmib', 'buft', 'fml', 'fml32', '/usr/lib/libcrypt.a']
-        libraries_ws = ['wsc', 'tmib', 'buft', 'fml', 'fml32', 'gpnet', 'engine', 'dl', 'pthread', '/usr/lib/libcrypt.a']
+        libraries = ['ndrx', 'tmib', 'buft', 'ubf', 'ubf32', '/usr/lib/libcrypt.a']
+        libraries_ws = ['wsc', 'tmib', 'buft', 'ubf', 'ubf32', 'gpnet', 'engine', 'dl', 'pthread', '/usr/lib/libcrypt.a']
 	
 
 
@@ -68,10 +68,10 @@ elif os.name == 'posix':
 
 
 # build the atmi and atmi/WS modules
-tuxedo_ext = Extension(name = 'tuxedo.atmi',
-		     define_macros = [("TUXVERSION", tuxversion)], 
-		     undef_macros = ["TUXWS"], 
-                     sources = ['tuxconvert.c', 'tuxmodule.c', 'tuxloop.c' ],
+endurox_ext = Extension(name = 'endurox.atmi',
+		     define_macros = [("NDRXVERSION", ndrxversion)], 
+		     undef_macros = ["NDRXWS"], 
+                     sources = ['ndrxconvert.c', 'ndrxmodule.c', 'ndrxloop.c' ],
                      include_dirs = include_dirs,
                      library_dirs = library_dirs,
                      libraries = libraries,
@@ -79,11 +79,11 @@ tuxedo_ext = Extension(name = 'tuxedo.atmi',
                      extra_link_args = extra_link_args
                      )
 
-tuxedo_ext_ws = Extension(name = 'tuxedo.atmiws',
-		     define_macros = [("TUXWS", 1), 
-				      ("TUXVERSION", tuxversion)
+endurox_ext_ws = Extension(name = 'endurox.atmiws',
+		     define_macros = [("NDRXWS", 1), 
+				      ("NDRXVERSION", ndrxversion)
 				      ], 
-                     sources = ['tuxconvert.c', 'tuxmodule.c' ],
+                     sources = ['ndrxconvert.c', 'ndrxmodule.c' ],
                      include_dirs = include_dirs,
                      library_dirs = library_dirs,
                      libraries = libraries_ws,
@@ -91,14 +91,14 @@ tuxedo_ext_ws = Extension(name = 'tuxedo.atmiws',
                      extra_link_args = extra_link_args
                      )
 
-for ver in [('tuxedo', tuxedo_ext),('tuxedo_ws', tuxedo_ext_ws)]:
+for ver in [('endurox', endurox_ext),('endurox_ws', endurox_ext_ws)]:
     setup(name = ver[0],
           version = '1.0',
-          description = 'Tuxmodule: A Python client and server library for use with BEA Tuxedo',
+          description = 'Ndrxmodule: A Python client and server library for use with BEA Endurox',
           author = 'Ralf Henschkowski',
           author_email = 'ralf.henschkowski@gmail.com',
-          url = 'http://code.google.com/p/tuxmodule',
-          packages = ["tuxedo"],
+          url = 'http://code.google.com/p/ndrxmodule',
+          packages = ["endurox"],
           ext_modules = [ver[1]]
           )
 

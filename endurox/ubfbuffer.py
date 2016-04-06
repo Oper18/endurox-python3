@@ -16,7 +16,7 @@ class EasyList(UserList):
 
 
 
-class FmlBuffer(UserDict):
+class UbfBuffer(UserDict):
         def __setitem__(self, key, item):
             if key not in self:
                 self.data[key] = EasyList()
@@ -39,7 +39,7 @@ class FmlBuffer(UserDict):
 
 
 def test():
-    buf = FmlBuffer()
+    buf = UbfBuffer()
     buf['huhu'][0] = "gaga"
     buf['huhu'][1] = "gugu"
     buf['huhu'][5] = "gigi"
